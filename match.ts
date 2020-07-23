@@ -36,12 +36,25 @@ export class Match {
             return '0-0, Deuce';
         }
 
-        // todo: advantage
+        const playerPointsMin = Math.min(player1Points, player2Points);
+        const playerPointsMax = Math.max(player1Points, player2Points);
+        const playerPointsDiff = playerPointsMax - playerPointsMin;
+        
+        // Advantage
+        if (playerPointsMin >= 3 && playerPointsDiff == 1) {
+            const playerWithAdvantage = player1Points == playerPointsMax
+                ? this._player1Name
+                : this._player2Name;
+            return `0-0, Advantage ${playerWithAdvantage}`;
+        }
 
-        const player1Score = SCORES[player1Points];
-        const player2Score = SCORES[player2Points];
+        // Running score
+        if (playerPointsMax < SCORES.length) {
+            return `0-0, ${SCORES[player1Points]}-${SCORES[player2Points]}`;
+        }
 
-        return `0-0, ${player1Score}-${player2Score}`;
+        // Exception
+        return null;
     }
 
     // indicates who won the point

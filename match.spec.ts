@@ -34,7 +34,7 @@ describe('tennis', () => {
             expect(match.score()).toEqual('0-0, Deuce');
         });
 
-        xit('should return "0-0, Advantage player 1" for match advantage', () => {
+        it('should return "0-0, Advantage player 1" for match advantage', () => {
             const match = new Match('player 1', 'player 2');
             match.pointWonBy("player 1");
             match.pointWonBy("player 2");
@@ -58,7 +58,12 @@ describe('tennis', () => {
             match.pointWonBy("player 1");
             expect(match.score()).toEqual('1-0, 0-0');
         });
-
+        
+        it('should return null when points exceed running scores', () => {
+            const match = new Match('player 1', 'player 2');
+            (<any>match)._playerPoints['player 1'] = 4;
+            expect(match.score()).toEqual(null);
+        });
     });
 
     describe('pointWonBy', () => {
