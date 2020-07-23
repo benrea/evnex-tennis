@@ -31,12 +31,15 @@ export class Match {
         const player1Points = this._playerPoints[this._player1Name];
         const player2Points = this._playerPoints[this._player2Name];
 
-        const player1Score = SCORES[player1Points];
-        const player2Score = SCORES[player2Points];
-
-        // todo: deuce
+        // Deuce
+        if (player1Points == player2Points && player1Points >= 3) {
+            return '0-0, Deuce';
+        }
 
         // todo: advantage
+
+        const player1Score = SCORES[player1Points];
+        const player2Score = SCORES[player2Points];
 
         return `0-0, ${player1Score}-${player2Score}`;
     }

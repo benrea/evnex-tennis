@@ -23,7 +23,7 @@ describe('tennis', () => {
             expect(match.score()).toEqual('0-0, 40-15');
         });
 
-        xit('should return "0-0, Deuce" for match deuce', () => {
+        it('should return "0-0, Deuce" for match deuce', () => {
             const match = new Match('player 1', 'player 2');
             match.pointWonBy("player 1");
             match.pointWonBy("player 2");
@@ -56,7 +56,7 @@ describe('tennis', () => {
             match.pointWonBy("player 2");
             match.pointWonBy("player 1");
             match.pointWonBy("player 1");
-            expect(match.score()).toEqual('0-0, 15-15');
+            expect(match.score()).toEqual('1-0, 0-0');
         });
 
     });
