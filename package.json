@@ -1,0 +1,17 @@
+{
+  "name": "evnex-tennis",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/benrea/evnex-tennis",
+  "author": "Benjamin Rea <me@benrea.dev>",
+  "license": "MIT",
+  "scripts": {
+    "test": "jest"
+  },
+  "devDependencies": {
+    "@types/jest": "^26.0.5",
+    "jest": "^26.1.0",
+    "ts-jest": "^26.1.3",
+    "typescript": "^3.9.7"
+  }
+}
