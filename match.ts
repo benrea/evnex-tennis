@@ -42,16 +42,16 @@ export class Match {
     public score(): string {
         return this._winner
             ? `${this._winner} wins the ${this._isTieGame ? 'tie' : 'set'}`
-            : `${this.getGameScore()}, ${this.getPointScore()}`
+            : `${this.getSetScore()}, ${this.getGameScore()}`
     }
 
-    private getGameScore(): string {
+    private getSetScore(): string {
         const player1Games = this._playerGames[this._player1Name];
         const player2Games = this._playerGames[this._player2Name];
         return `${player1Games}-${player2Games}`;
     }
 
-    private getPointScore(): string {
+    private getGameScore(): string {
         const player1Points = this._playerPoints[this._player1Name];
         const player2Points = this._playerPoints[this._player2Name];
 
