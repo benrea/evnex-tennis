@@ -1,9 +1,4 @@
- /**
-  * Points
-  * Games
-  * Sets
-  */
-
+//#region Constants
 // Scores from zero to three points are described as 0, 15, 30, 40, respectively
  const SCORES = [
      0,
@@ -11,20 +6,23 @@
      30,
      40
  ]
-
- const ADVANTAGE_MIN_POINTS = 3;
- const DEUCE_MIN_POINTS = 3;
-
+ const MIN_ADVANTAGE_POINTS = 3;
+ const ADVANTAGE_POINTS_MARGIN = 1;
+ const MIN_DEUCE_POINTS = 3;
  const MIN_POINTS_IN_GAME = 4;
- const MIN_POINTS_DIFF_IN_GAME = 2;
-
+ const MIN_POINTS_MARGIN_IN_GAME = 2;
+ const MIN_POINTS_IN_TIE_GAME = 7;
+ const MIN_POINTS_MARGIN_IN_TIE_GAME = 2;
  const MIN_GAMES_IN_SET = 6;
- const MIN_GAMES_DIFF_IN_SET = 2;
+ const MIN_GAMES_MARGIN_IN_SET = 2;
+ const MIN_GAMES_MARGIN_IN_TIE = 1;
+ //#endregion
 
 export class Match {
     private _playerPoints: {[playerName: string]: number};
     private _playerGames: {[playerName: string]: number};
     private _winner: string;
+    private _isTieGame: boolean = false;
 
     constructor(
         private _player1Name: string,
@@ -43,7 +41,7 @@ export class Match {
     // returns the current set score followed by the current game score
     public score(): string {
         return this._winner
-            ? `${this._winner} wins the set`
+            ? `${this._winner} wins the ${this._isTieGame ? 'tie' : 'set'}`
             : `${this.getGameScore()}, ${this.getPointScore()}`
     }
 
@@ -58,16 +56,16 @@ export class Match {
         const player2Points = this._playerPoints[this._player2Name];
 
         // Deuce
-        if (player1Points == player2Points && player1Points >= DEUCE_MIN_POINTS) {
+        if (player1Points == player2Points && player1Points >= MIN_DEUCE_POINTS) {
             return 'Deuce';
         }
 
         const playerPointsMin = Math.min(player1Points, player2Points);
         const playerPointsMax = Math.max(player1Points, player2Points);
-        const playerPointsDiff = playerPointsMax - playerPointsMin;
+        const playerPointsMargin = playerPointsMax - playerPointsMin;
         
         // Advantage
-        if (playerPointsMin >= ADVANTAGE_MIN_POINTS && playerPointsDiff == 1) {
+        if (playerPointsMin >= MIN_ADVANTAGE_POINTS && playerPointsMargin == ADVANTAGE_POINTS_MARGIN) {
             const playerWithAdvantage = player1Points == playerPointsMax
                 ? this._player1Name
                 : this._player2Name;
@@ -86,27 +84,56 @@ export class Match {
     // Indicates who won the point
     public pointWonBy(playerName: string): void {
         this._playerPoints[playerName]++;
-        if (this._playerPoints[playerName] < MIN_POINTS_IN_GAME) {
+        const playerPointsMargin = Math.abs(this._playerPoints[this._player1Name] - this._playerPoints[this._player2Name]);
+
+        const minPoints = this._isTieGame
+            ? MIN_POINTS_IN_TIE_GAME
+            : MIN_POINTS_IN_GAME;
+        
+        const minPointsMargin = this._isTieGame
+            ? MIN_POINTS_MARGIN_IN_TIE_GAME
+            : MIN_POINTS_MARGIN_IN_GAME;
+
+        // Play on
+        if (this._playerPoints[playerName] < minPoints ||
+            playerPointsMargin < minPointsMargin) {
             return;
         }
 
-        // Game won
-        const playerPointsDiff = Math.abs(this._playerPoints[this._player1Name] - this._playerPoints[this._player2Name]);
-        if (playerPointsDiff >= MIN_POINTS_DIFF_IN_GAME) {
-            this._playerGames[playerName]++;
-            this._playerPoints[this._player1Name] = 0;
-            this._playerPoints[this._player2Name] = 0;
-        }
+        return this.gameWonBy(playerName)
+    }
+
+    // Indicates who won the game
+    private gameWonBy(playerName: string) {
+        this._playerGames[playerName]++;
+        this._playerPoints[this._player1Name] = 0;
+        this._playerPoints[this._player2Name] = 0;
+
+        // Play on
         if (this._playerGames[playerName] < MIN_GAMES_IN_SET) {
             return;
         }
 
-        // Set won
-        const playerGamesDiff = Math.abs(this._playerGames[this._player1Name] - this._playerGames[this._player2Name]);
-        if (playerGamesDiff >= MIN_GAMES_DIFF_IN_SET) {
-            this._winner = playerName;
+        // Set tie game
+        if (this._playerGames[this._player1Name] == this._playerGames[this._player2Name]) {
+            this._isTieGame = true;
         }
 
-        // TODO: Tie game
+        const playerGamesMargin = Math.abs(this._playerGames[this._player1Name] - this._playerGames[this._player2Name]);
+        const minGamesMargin = this._isTieGame
+            ? MIN_GAMES_MARGIN_IN_TIE
+            : MIN_GAMES_MARGIN_IN_SET;
+
+        // Play on
+        if (playerGamesMargin < minGamesMargin) {
+            return;
+        }
+
+        this.setWonBy(playerName);
+    }
+
+    // Indicates who won the set
+    private setWonBy(playerName: string) {
+        this._winner = playerName;
     }
 }
