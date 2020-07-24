@@ -18,6 +18,8 @@ import { Player } from "./player";
  const MIN_GAMES_IN_SET = 6;
  const MIN_GAMES_MARGIN_IN_SET = 2;
  const MIN_GAMES_MARGIN_IN_TIE = 1;
+ const MIN_SETS_IN_MATCH = 1;
+ const MIN_SETS_MARGIN_IN_MATCH = 1;
  //#endregion
 
 export class Match {
