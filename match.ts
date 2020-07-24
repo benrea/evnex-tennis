@@ -2,28 +2,28 @@ import { Player } from "./player";
 
 //#region Constants
 // Scores from zero to three points are described as 0, 15, 30, 40, respectively
- const SCORES = [
-     0,
-     15,
-     30,
-     40
- ]
- const MIN_ADVANTAGE_POINTS = 3;
- const ADVANTAGE_POINTS_MARGIN = 1;
- const MIN_DEUCE_POINTS = 3;
- const MIN_POINTS_IN_GAME = 4;
- const MIN_POINTS_MARGIN_IN_GAME = 2;
- const MIN_POINTS_IN_TIE_GAME = 7;
- const MIN_POINTS_MARGIN_IN_TIE_GAME = 2;
- const MIN_GAMES_IN_SET = 6;
- const MIN_GAMES_MARGIN_IN_SET = 2;
- const MIN_GAMES_MARGIN_IN_TIE = 1;
- const MIN_SETS_IN_MATCH = 1;
- const MIN_SETS_MARGIN_IN_MATCH = 1;
- //#endregion
+const SCORES = [
+    0,
+    15,
+    30,
+    40
+]
+const MIN_ADVANTAGE_POINTS = 3;
+const ADVANTAGE_POINTS_MARGIN = 1;
+const MIN_DEUCE_POINTS = 3;
+const MIN_POINTS_IN_GAME = 4;
+const MIN_POINTS_MARGIN_IN_GAME = 2;
+const MIN_POINTS_IN_TIE_GAME = 7;
+const MIN_POINTS_MARGIN_IN_TIE_GAME = 2;
+const MIN_GAMES_IN_SET = 6;
+const MIN_GAMES_MARGIN_IN_SET = 2;
+const MIN_GAMES_MARGIN_IN_TIE = 1;
+const MIN_SETS_IN_MATCH = 1;
+const MIN_SETS_MARGIN_IN_MATCH = 1;
+//#endregion
 
 export class Match {
-    private _players: {[playerName: string]: Player};
+    private _players: { [playerName: string]: Player };
     private get _player1(): Player {
         return this._players[this._player1Name];
     }
@@ -57,16 +57,18 @@ export class Match {
 
     private getGameScore(): string {
         // Deuce
-        if (this._player1.points == this._player2.points && this._player1.points >= MIN_DEUCE_POINTS) {
+        if (this._player1.points == this._player2.points &&
+            this._player1.points >= MIN_DEUCE_POINTS) {
             return 'Deuce';
         }
 
         const playerPointsMin = Math.min(this._player1.points, this._player2.points);
         const playerPointsMax = Math.max(this._player1.points, this._player2.points);
         const playerPointsMargin = playerPointsMax - playerPointsMin;
-        
+
         // Advantage
-        if (playerPointsMin >= MIN_ADVANTAGE_POINTS && playerPointsMargin == ADVANTAGE_POINTS_MARGIN) {
+        if (playerPointsMin >= MIN_ADVANTAGE_POINTS &&
+            playerPointsMargin == ADVANTAGE_POINTS_MARGIN) {
             const playerWithAdvantage = this._player1.points == playerPointsMax
                 ? this._player1
                 : this._player2;
@@ -91,7 +93,7 @@ export class Match {
         const minPoints = this._isTieGame
             ? MIN_POINTS_IN_TIE_GAME
             : MIN_POINTS_IN_GAME;
-        
+
         const minPointsMargin = this._isTieGame
             ? MIN_POINTS_MARGIN_IN_TIE_GAME
             : MIN_POINTS_MARGIN_IN_GAME;
